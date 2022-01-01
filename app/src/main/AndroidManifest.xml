@@ -9,7 +9,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="CleanURL"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@android:style/Theme.NoDisplay">
+        android:theme="@android:style/Theme.NoDisplay"
+        android:networkSecurityConfig="@xml/network_security_config">
         <activity
             android:name=".MainActivity"
             android:exported="true"
