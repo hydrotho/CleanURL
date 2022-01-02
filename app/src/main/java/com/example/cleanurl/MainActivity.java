@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.util.Patterns;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.regex.Matcher;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends Activity {
 
@@ -38,27 +40,24 @@ public class MainActivity extends Activity {
                 String finalURL = getFinalURL(shitURL);
                 String cleanURL = getCleanURL(finalURL);
                 shareCleanURL(cleanURL);
-                finish();
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                finish();
             }
         }).start();
     }
 
     private String getFinalURL(String url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
-        urlConnection.setInstanceFollowRedirects(false);
-        String UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36";
-        urlConnection.setRequestProperty("User-Agent", UA);
-        urlConnection.connect();
+        OkHttpClient client = new OkHttpClient();
 
-        int responseCode = urlConnection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
-            String redirectURL = urlConnection.getHeaderField("Location");
-            return getFinalURL(redirectURL);
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return response.request().url().toString();
         }
-
-        return url;
     }
 
     private String getCleanURL(String url) throws URISyntaxException {
