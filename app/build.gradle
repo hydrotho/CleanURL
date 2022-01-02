@@ -9,8 +9,8 @@ android {
         applicationId "com.example.cleanurl"
         minSdk 26
         targetSdk 32
-        versionCode 10000
-        versionName "1.0.0"
+        versionCode 11000
+        versionName "1.1.0"
 
         setProperty("archivesBaseName", "CleanURL")
 
